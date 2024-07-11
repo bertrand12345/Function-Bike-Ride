@@ -1,3 +1,4 @@
+[![Python CI Steps Github](https://github.com/bertrand12345/Function-Bike-Ride/actions/workflows/main.yml/badge.svg)](https://github.com/bertrand12345/Function-Bike-Ride/actions/workflows/main.yml)
 # Function-Bike-Ride
 This is a repo for showing what you can do with a function
 
