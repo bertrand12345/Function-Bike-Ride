@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import click
-import glob
+import boto3
 
 
 # this is bad code intentionally
@@ -8,22 +8,37 @@ import glob
 
 @click.command()
 @click.option(
-    "--path",
-    prompt="Path to search for csv files",
-    help="This is the path to search for files: /tmp",
+    '--bucket',
+    prompt='S3 Bucket',
+    help='This is the S3 Bucket'
 )
 @click.option(
-    "--ftype", prompt="Pass in the type of file", help="Pass in the file type : i.e csv"
+    '--name', prompt='This is the name of the image', help="Pass in the name: i.e. husky.png"
 )
-def search(path, ftype):
-    """This is tool that search for patterns like *.csv"""
+def labels(bucket, name):
+    """This takes an S3 bucket and a image name"""
 
-    results = glob.glob(f"{path}/*.{ftype}")
-    click.echo(click.style("Found Matches:", fg="red"))
-    for result in results:
-        click.echo(click.style(f"{result}", bg="yellow", fg="white"))
+    print(f"This is the bucketname {bucket} !")
+    print(f" This is the imagename {name} !")
+    rekognition = boto3.client("rekognition")
+    response = rekognition.detect_labels(
+        Image={
+            "S3Object": {
+                "Bucket": bucket,
+                "Name": name,
+            
+             }
+        },
+    )
 
+    labels = response['Labels']
+    click.echo(click.style('Found Labels:', bg='red'))
+    for label in labels:
+        click.echo(click.style(f"{label}", bg="blue", fg="white"))
+
+
+    
 
 if __name__ == "__main__":
     # pylint: disable=no-value-for-parameter
-    search()
+    labels()
